@@ -1,0 +1,27 @@
+.header-container {
+    padding: 0 4rem;
+    position: absolute;
+    z-index: 50;
+    top: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    left: 0;
+    width: 100%;
+}
+
+.logo img {
+    width: 200px;
+}
+
+button {
+    padding: 0.5rem 1rem;;
+    background-color: #e50914;
+    border: none;
+    cursor: pointer;
+    color: white;
+    border-radius: 0.2rem;
+    font-weight: bolder;
+    font-size: 1.05rem;
+}

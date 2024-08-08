@@ -1,9 +1,34 @@
+/* eslint-disable no-unused-vars */
+import { useState } from "react";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { firebaseAuth } from "../utils/firebase-config";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 import BackgroundImage from "../components/BackgroundImage";
-import styled from "styled-components";
 import Header from "../components/Header";
 
+
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(firebaseAuth, email, password);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  onAuthStateChanged(firebaseAuth, (currentUser) => {
+    if (currentUser) navigate("/");
+  });
+
   return (
     <LoginContainer>
       <BackgroundImage />
@@ -15,9 +40,32 @@ const LoginPage = () => {
               <h1>Login</h1>
             </div>
             <div className="container">
-              <input type="text" placeholder="email" />
-              <input type="password" placeholder="password" />
-              <button>Login</button>
+              <div className="inner-container">
+                <label htmlFor="">Email</label>
+                <TextField
+                  className="input"
+                  id="email"
+                  name="email"
+                  variant="outlined"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                />
+              </div>
+              <div className="inner-container">
+                <label>Password</label>
+                <TextField
+                  className="input"
+                  id="password"
+                  type="password"
+                  name="password"
+                  variant="outlined"
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                />
+              </div>
+              <Button variant="text" onClick={handleLogin}>
+                Login
+              </Button>
             </div>
           </div>
         </div>
@@ -67,6 +115,10 @@ const LoginContainer = styled.div`
           outline: none;
           border: none;
         }
+        #email,
+        #password {
+          background-color: white;
+        }
         button {
           padding: 0.5rem;
           background-color: red;
@@ -77,6 +129,10 @@ const LoginContainer = styled.div`
           font-weight: bolder;
           font-size: 1.05rem;
         }
+      }
+      .inner-container {
+        display: flex;
+        flex-direction: column;
       }
     }
   }

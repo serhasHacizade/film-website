@@ -1,10 +1,39 @@
-import BackgroundImage from "../components/BackgroundImage";
-import styled from "styled-components";
-import Header from "../components/Header";
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
+import styled from "styled-components";
+import { firebaseAuth } from "../utils/firebase-config";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+
+import BackgroundImage from "../components/BackgroundImage";
+
+import Header from "../components/Header";
+
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [formValues, setFormValues] = useState({ email: "", password: "" });
+
+  const handleSignIn = async () => {
+    try {
+      const { email, password } = formValues;
+      await createUserWithEmailAndPassword(firebaseAuth, email, password);
+    } catch (error) {
+      console.log(error);
+    }
+    
+  };
+  
+  onAuthStateChanged(firebaseAuth, (currentUser) => {
+    if (currentUser) navigate("/");
+  });
 
   return (
     <SignupContainer>
@@ -21,14 +50,42 @@ const Signup = () => {
           </div>
           <div className="form">
             {showPassword ? (
-              <input type="password" placeholder="password" name="password" />
+              <TextField
+                className="input"
+                type="password "
+                placeholder="password"
+                name="password"
+                value={formValues.password}
+                onChange={(e) =>
+                  setFormValues({
+                    ...formValues,
+                    [e.target.name]: e.target.value,
+                  })
+                }
+                variant="outlined"
+              />
             ) : (
-              <input type="email" placeholder="email" name="email" />
+              <TextField
+                className="input"
+                placeholder="email"
+                name="email"
+                variant="outlined"
+                type="email"
+                value={formValues.email}
+                onChange={(e) =>
+                  setFormValues({
+                    ...formValues,
+                    [e.target.name]: e.target.value,
+                  })
+                }
+              />
             )}
             {!showPassword ? (
-              <button onClick={() => setShowPassword(true)}>Get Started</button>
+              <Button onClick={() => setShowPassword(true)} variant="text">
+                Get Started
+              </Button>
             ) : (
-              <button>Signup</button>
+              <Button variant="text" onClick={handleSignIn}>Signup</Button>
             )}
           </div>
         </div>
@@ -76,17 +133,22 @@ const SignupContainer = styled.div`
   }
   .form {
     display: grid;
-    grid-template-columns: ${({showPassword}) => showPassword ? "1fr 1fr" : "2fr 1fr"};
+    grid-template-columns: ${({ showPassword }) =>
+      showPassword ? "1fr 1fr" : "2fr 1fr"};
     width: 60%;
     display: flex;
+    justify-content: center;
     margin-top: 3rem;
     input {
       color: black;
+      background-color: white;
+      border-radius: 4px;
       padding: 1.5rem;
       font-size: 1.2rem;
       width: 45rem;
       &:focus {
         outline: none;
+        border: none;
       }
     }
     button {

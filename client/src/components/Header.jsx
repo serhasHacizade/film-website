@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
 
 const Header = (props) => {
   const navigate = useNavigate();
@@ -13,9 +14,12 @@ const Header = (props) => {
           alt="no internet connection"
         />
       </div>
-      <button onClick={() => navigate(props.login ? "/login" : "/signup")}>
+      <Button
+        variant="text"
+        onClick={() => navigate(props.login ? "/login" : "/signup")}
+      >
         {props.login ? "Log In" : "Sign In"}
-      </button>
+      </Button>
     </HeaderContainer>
   );
 };
@@ -26,7 +30,7 @@ const HeaderContainer = styled.div`
   align-items: center;
   padding: 1rem;
   .logo {
-    img{
+    img {
       height: 3rem;
       cursor: pointer;
     }
@@ -40,6 +44,9 @@ const HeaderContainer = styled.div`
     border-radius: 0.2rem;
     font-weight: bolder;
     font-size: 1.05rem;
+    &:hover {
+      background-color: red;
+    }
   }
 `;
 
